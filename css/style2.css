@@ -37,3 +37,47 @@
     font-size: 14px;
     color: #666;
 }
+.card3 {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    width: 300px;
+}
+
+.card-title3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-text3 {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.card-link3 {
+    font-size: 14px;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #28a745;
+    transition: background-color 0.3s ease;
+}
+
+.card-link3:hover {
+    background-color: #218838;
+}
+
+.card-link3:focus {
+    outline: none;
+}
+
+.card3:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
