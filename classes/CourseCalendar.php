@@ -8,20 +8,25 @@ class CourseCalendar {
         $this->db = new Database();
     }
 
-    public function getEventsByStudent($student_id) {
-        $sql = "SELECT course_name, event_title, event_date, start_time, end_time, location
-                FROM course_calendar
-                WHERE student_id = ? AND event_date >= CURDATE()
-                ORDER BY event_date, start_time";
-        $stmt = $this->db->prepare($sql);
+    public function getDeadlinesByStudent($student_id) {
+        $sql = "SELECT course_name, deadline FROM course_calendar WHERE student_id = ?";
+        $stmt = $this->db->conn->prepare($sql);
+
+        if (!$stmt) {
+            die("Prepare failed: " . $this->db->conn->error);
+        }
+
         $stmt->bind_param("i", $student_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $events = [];
+
+        $deadlines = [];
         while ($row = $result->fetch_assoc()) {
-            $events[] = $row;
+            $deadlines[] = $row;
         }
-        return $events;
+
+        $stmt->close();
+        return $deadlines;
     }
 }
 ?>
