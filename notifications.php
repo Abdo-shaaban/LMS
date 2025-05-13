@@ -1,27 +1,22 @@
 <?php
 session_start();
 
-// Check login
-if (!isset($_SESSION['student_id'])) {
-    header("Location: dash.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: Student_dashboard.php");
     exit();
 }
- 
-// Include required files
-include_once 'classes/Notification.php';
-include_once 'classes/Student.php';
-
-$student_id = $_SESSION['student_id'];
+include_once 'classes/Notification.php'; 
+// In your DB, notifications.user_id refers to User.UserId
+$user_id = $_SESSION['user_id']; // student_id == UserId
 $notificationObj = new Notification();
-$notifications = $notificationObj->getNotifications($student_id);
+$notifications = $notificationObj->getNotifications($user_id);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once 'includes/head.php'; include_once 'includes/navbar.php'; include_once 'includes/header.php';?>
-
 <body>
 <div class="container mt-5">
-    <h2 class="mb-4">Your Notifications</h2>
+    <h2 class="mb-4 text-center">Your Notifications</h2>
     <div class="row g-4">
         <?php if (empty($notifications)): ?>
             <div class="col-12">
@@ -30,10 +25,14 @@ $notifications = $notificationObj->getNotifications($student_id);
         <?php else: ?>
             <?php foreach ($notifications as $note): ?>
                 <div class="col-md-6 col-lg-4">
-                    <div class="card">
-                        <h5 class="card-title">Notification</h5>
-                        <p class="card-text"><?= htmlspecialchars($note['message']) ?></p>
-                        <small class="text-muted"><?= date("M d, Y H:i", strtotime($note['created_at'])) ?></small>
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Notification</h5>
+                            <p class="card-text"><?= htmlspecialchars($note['message']) ?></p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small><?= date("M d, Y H:i", strtotime($note['created_at'])) ?></small>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
