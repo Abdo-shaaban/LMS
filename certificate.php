@@ -1,32 +1,23 @@
 <?php
 session_start();
-if (!isset($_SESSION['student_name'])) {
-    // Fetch from DB if not set
-    include_once 'classes/Student.php'; // Or wherever your student logic is
-    $studentObj = new Student();
-    $profile = $studentObj->getProfile($_SESSION['student_id']); // Example method
-    $_SESSION['student_name'] = $profile['name'];
-}
-if (!isset($_SESSION['student_id'])) {
-    header("Location: dash.php");
-    exit();
+require_once 'classes/Student.php';
+require_once 'classes/Certificate.php';
+
+if (!isset($_SESSION['user_id'])) {
+    die("Unauthorized access.");
 }
 
-include_once 'classes/Certificate.php';
+$student_id = $_SESSION['user_id'];
 
-$student_id = $_SESSION['student_id'];
-$course_id = isset($_GET['course_id']) ? (int)$_GET['course_id'] : 0;
-
-$certificateObj = new Certificate();
-$certificates = $certificateObj->getCertificate($student_id, $course_id);
+$certificate = new Certificate();
+$certificates = $certificate->getAllCertificatesForStudent($student_id);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once 'includes/head.php'; include_once 'includes/navbar.php'; include_once 'includes/header.php';?>
 <body>
 <div class="container mt-5">
-    <h2 class="mb-4">My Certificates</h2>
+    <h2 class="mb-4 text-center">My Certificates</h2>
     <div class="row g-4">
         <?php if (empty($certificates)): ?>
             <div class="col-12">
@@ -34,19 +25,20 @@ $certificates = $certificateObj->getCertificate($student_id, $course_id);
             </div>
         <?php else: ?>
             <?php foreach ($certificates as $cert): ?>
-                <div class="col-md-6 col-lg-4">
-                    <div class="card3">
-                        <a href="css/style2.css"></a>
-                        <h5 class="card-title3">Course #<?= htmlspecialchars($cert['course_id']) ?></h5>
-                        <p class="card-text3">Issued on: <?= date("M d, Y", strtotime($cert['issue_date'])) ?></p>
-                        <a href="generate_certificate.php?course=<?= urlencode($cert['course_id']) ?>" target="_blank" class="card-link btn btn-success3">Generate PDF</a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+    <div class="col-md-6 col-lg-4">
+        <div class="card3 p-3 border rounded shadow-sm text-center">
+            <h5 class="card-title3 mb-2">Course: <?= htmlspecialchars($cert['course_id']) ?></h5>
+            <p class="card-text3">Issued on: <?= date("M d, Y", strtotime($cert['issue_date'])) ?></p>
+            <p class="card-text3">Grade: <?= htmlspecialchars($cert['grade']) ?></p>
+            <p class="card-text3">GPA: <?= htmlspecialchars($cert['gpa']) ?></p>
+            <a href="generate_certificate.php?course_id=<?= urlencode($cert['course_id']) ?>" target="_blank" class="btn btn-success">Download PDF</a>
+
+        </div>
+    </div>
+<?php endforeach; ?>
         <?php endif; ?>
     </div>
 </div>
-
 
 <?php include_once 'includes/Footer.php';?>
    <!-- Back to Top -->
