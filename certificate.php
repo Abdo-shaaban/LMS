@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once 'classes/Student.php';
-require_once 'classes/Certificate.php';
+include_once 'classes/Student.php';
+include_once 'classes/Certificate.php';
 
 if (!isset($_SESSION['user_id'])) {
     die("Unauthorized access.");
